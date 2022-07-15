@@ -37,12 +37,11 @@ public class CategoryScreenHandler : MonoBehaviour
     public void SelectCategory(Category category)
     {
         StaticGameInfo.selectedCategory = category;
-        Debug.Log(StaticGameInfo.selectedCategory.name);
+        Debug.Log("Selected Category is: " + StaticGameInfo.selectedCategory.name);
 
         StaticGameInfo.questionRequest = APIHelper.ApiFetchQuestionsByCategory(category);
         if (StaticGameInfo.questionRequest.response_code == 0)
         {
-            Debug.Log("response_code == 0");
             Debug.Log(StaticGameInfo.questionRequest.results[0].question);
             SceneManager.LoadScene("GameScene");
         }
@@ -51,8 +50,6 @@ public class CategoryScreenHandler : MonoBehaviour
             Debug.Log("response_code = " + StaticGameInfo.questionRequest.response_code);
             //Give warning or smthng
         }
-
-        BackToMainMenu(); // This line will be deleted when GameScene is done
     }
 
     public void BackToMainMenu()

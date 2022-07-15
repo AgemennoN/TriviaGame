@@ -31,7 +31,6 @@ public class MainMenuHandler : MonoBehaviour
 
         if (StaticGameInfo.questionRequest.response_code == 0)
         {
-            Debug.Log("response_code == 0");
             Debug.Log(StaticGameInfo.questionRequest.results[0].question);
 
             SceneManager.LoadScene("GameScene");
