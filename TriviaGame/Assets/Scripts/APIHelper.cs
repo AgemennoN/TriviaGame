@@ -15,9 +15,18 @@ public static class APIHelper
     }
 
 
-    public static FetchedQuestions ApiFetchQuestions()
+    public static FetchedQuestions ApiFetchRandomQuestions()
     {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api.php?amount=1&category=20&type=multiple");
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api.php?amount=10&type=multiple");
+        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        StreamReader reader = new StreamReader(response.GetResponseStream());
+        string json = reader.ReadToEnd();
+        return JsonUtility.FromJson<FetchedQuestions>(json);
+    }
+
+    public static FetchedQuestions ApiFetchQuestionsByCategory(Category category)
+    {
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api.php?amount=10&category=" + category.id + "&type = multiple");
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
         string json = reader.ReadToEnd();

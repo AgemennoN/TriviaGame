@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuHandler : MonoBehaviour
@@ -25,4 +24,24 @@ public class MainMenuHandler : MonoBehaviour
         categoryScreen.SetActive(true);
         gameObject.SetActive(false);
     }
+
+    public void RandomQuestions()
+    {
+        StaticGameInfo.questionRequest = APIHelper.ApiFetchRandomQuestions();
+
+        if (StaticGameInfo.questionRequest.response_code == 0)
+        {
+            Debug.Log("response_code == 0");
+            Debug.Log(StaticGameInfo.questionRequest.results[0].question);
+
+            SceneManager.LoadScene("GameScene");
+
+        }
+        else
+        {
+            Debug.Log("response_code = " + StaticGameInfo.questionRequest.response_code);
+            //Give warning or smthng
+        }
+    }
+
 }
