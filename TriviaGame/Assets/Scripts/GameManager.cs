@@ -10,16 +10,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text countdownText;
     public GameObject questionPanelPrefab;
     public GameObject currentQuestionPanel;
-
+    public GameObject statisticsPanelPrefab;
+    
 
     public List<GameObject> questionPanels;
 
 
     [HideInInspector] public float nextQuestionWaitDuration = 4.0f;
-    private float countdownTotalTime = 10.4f;
+    private float countdownTotalTime = 20.4f;
     private float countdownTimeLeft;
-    private bool countdownActive;
-    public bool isGameEnd;
+    [HideInInspector] public bool countdownActive;
+    [HideInInspector] public bool isGameEnd;
 
     void Start()
     {
@@ -47,14 +48,22 @@ public class GameManager : MonoBehaviour
         // This if probably should be in action button
         if (StaticGameInfo.currentQuestionIndex == StaticGameInfo.totalQuestionNumber)
         {
+            Debug.Log("if e girdi");
+            Debug.Log("StaticGameInfo.currentQuestionIndex: " + StaticGameInfo.currentQuestionIndex);
+            Debug.Log("StaticGameInfo.totalQuestionNumber: " + StaticGameInfo.totalQuestionNumber);
+
+            currentQuestionPanel = Instantiate(statisticsPanelPrefab, canvas.transform);
+            questionPanels.Add(currentQuestionPanel);
             EndGame();
-            return;
         }
+        else
+        {
+            Debug.Log("Else e girdi, index =  " + StaticGameInfo.currentQuestionIndex);
+            currentQuestionPanel = Instantiate(questionPanelPrefab, canvas.transform);
+            questionPanels.Add(currentQuestionPanel);
 
-        currentQuestionPanel = Instantiate(questionPanelPrefab,canvas.transform);
-        questionPanels.Add(currentQuestionPanel);
-
-        ResetCountdown();
+            ResetCountdown();
+        }
 
     }
 
@@ -81,7 +90,7 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
-        // Statics screen
+        countdownText.gameObject.SetActive(false);
         // Previous Question button
         // Next Question button
     }

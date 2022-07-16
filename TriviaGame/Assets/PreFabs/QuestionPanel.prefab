@@ -319,10 +319,10 @@ RectTransform:
   m_Father: {fileID: 5836702651971987915}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 223.5, y: -777}
-  m_SizeDelta: {x: 293.6102, y: 31.5043}
+  m_AnchorMin: {x: 0.1728971, y: 0}
+  m_AnchorMax: {x: 0.8254743, y: 0.039629627}
+  m_AnchoredPosition: {x: 0.5, y: 1}
+  m_SizeDelta: {x: 1.610199, y: -0.49572754}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9148075402292763565
 CanvasRenderer:
@@ -1088,10 +1088,10 @@ RectTransform:
   m_Father: {fileID: 5836702651971987915}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 223.5, y: -777}
-  m_SizeDelta: {x: 293.6102, y: 31.5043}
+  m_AnchorMin: {x: 0.1728971, y: 0}
+  m_AnchorMax: {x: 0.8254743, y: 0.039629627}
+  m_AnchoredPosition: {x: 0.5, y: 0.5}
+  m_SizeDelta: {x: 1.610199, y: -1.4957275}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4775103599965253950
 CanvasRenderer:
@@ -1694,6 +1694,13 @@ MonoBehaviour:
   - {fileID: 2601917133184422019}
   ActionBtn: {fileID: 2228545528746649467}
   NextQuestionBtn: {fileID: 4001539305504759011}
+  question:
+    category: 
+    type: 
+    difficulty: 
+    question: 
+    correct_answer: 
+    incorrect_answers: []
   isAnsweredCorrectly: 0
 --- !u!1 &9046604567752168387
 GameObject:

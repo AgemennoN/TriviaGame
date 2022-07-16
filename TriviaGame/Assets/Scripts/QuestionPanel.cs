@@ -15,7 +15,7 @@ public class QuestionPanel : MonoBehaviour
     private GameManager gameManager;
 
     private int questionIndex;
-    private Question question;
+    [HideInInspector] public Question question;
     public bool isAnsweredCorrectly;
     int correctAnswerIdx;
 
@@ -67,27 +67,22 @@ public class QuestionPanel : MonoBehaviour
         }
 
         ActionBtn.onClick.AddListener(delegate { SetActionButton(TActBtnFunctions.DisplayAnswer); });
-
     }
 
     private void CorrectAnswerButtonClick()
     {
-        Debug.Log("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEY");
         isAnsweredCorrectly = true;
 
         SetActionButton(TActBtnFunctions.CorrectAnswer);
-
     }
 
     private void WrongAnswerButtonClick(int BtnIndex)
     {
-        Debug.Log("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         isAnsweredCorrectly = false;
 
         AnswerBtns[BtnIndex].GetComponent<Image>().color = Color.red;
 
         SetActionButton(TActBtnFunctions.WrongAnswer);
-
     }
 
     public enum TActBtnFunctions {TimeIsUp, CorrectAnswer, WrongAnswer, DisplayAnswer };
@@ -131,6 +126,7 @@ public class QuestionPanel : MonoBehaviour
 
     private void DisableButtons()
     {
+        gameManager.countdownActive = false; // Stops Timer to answer the question.
         foreach (Button AnswerBtn in AnswerBtns)
         {
             AnswerBtn.enabled = false;
@@ -144,12 +140,14 @@ public class QuestionPanel : MonoBehaviour
     private IEnumerator NextQuestionCoroutine()
     {
         float LeftTime = gameManager.nextQuestionWaitDuration;
-        Debug.Log("nextQuestionWaitDuration: " + gameManager.nextQuestionWaitDuration);
+        string text = "Next Question In ";  
+        if (questionIndex == StaticGameInfo.totalQuestionNumber - 1)
+        {
+            text = "Statistics are in ";
+        }
 
         yield return new WaitForSeconds(1);
         LeftTime -= 1;
-        Debug.Log("LeftTime: " + LeftTime);
-
 
         ActionBtn.gameObject.SetActive(false);
 
@@ -158,9 +156,7 @@ public class QuestionPanel : MonoBehaviour
 
         while (LeftTime >= 0)
         {
-            Debug.Log("inside while LeftTime: " + LeftTime);
-
-            NextQuestionBtn.GetComponentInChildren<Text>().text = "Next Question In " + ((int)LeftTime) + "Seconds";
+            NextQuestionBtn.GetComponentInChildren<Text>().text = text + ((int)LeftTime) + " Seconds";
             yield return new WaitForSeconds(1);
             LeftTime -= 1;
         }

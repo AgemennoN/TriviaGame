@@ -37,12 +37,11 @@ public class CategoryScreenHandler : MonoBehaviour
     public void SelectCategory(Category category)
     {
         StaticGameInfo.selectedCategory = category;
-        Debug.Log("Selected Category is: " + StaticGameInfo.selectedCategory.name);
 
         StaticGameInfo.questionRequest = APIHelper.ApiFetchQuestionsByCategory(category);
         if (StaticGameInfo.questionRequest.response_code == 0)
         {
-            Debug.Log(StaticGameInfo.questionRequest.results[0].question);
+            StaticGameInfo.totalQuestionNumber = StaticGameInfo.questionRequest.results.Length;
             SceneManager.LoadScene("GameScene");
         }
         else
