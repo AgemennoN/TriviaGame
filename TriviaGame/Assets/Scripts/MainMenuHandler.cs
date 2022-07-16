@@ -31,6 +31,7 @@ public class MainMenuHandler : MonoBehaviour
 
         if (StaticGameInfo.questionRequest.response_code == 0)
         {
+            StaticGameInfo.totalQuestionNumber = StaticGameInfo.questionRequest.results.Length;
             Debug.Log(StaticGameInfo.questionRequest.results[0].question);
 
             SceneManager.LoadScene("GameScene");

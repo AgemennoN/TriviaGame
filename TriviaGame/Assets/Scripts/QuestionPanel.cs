@@ -5,8 +5,12 @@ using UnityEngine.UI;
 
 public class QuestionPanel : MonoBehaviour
 {
+    [SerializeField] private Text categoryText;
+    [SerializeField] private Text questionRankText;
     [SerializeField] private Text questionText;
     public Button[] AnswerBtns;
+    public Button ActionBtn;
+    public Button NextQuestionBtn;
 
     private GameManager gameManager;
 
@@ -23,11 +27,17 @@ public class QuestionPanel : MonoBehaviour
         question = StaticGameInfo.questionRequest.results[questionIndex];
 
 
-        questionText.text = question.question;
-        //SetTitle();
+        SetTexts();
         SetButtons();
     }
 
+    private void SetTexts()
+    {
+        categoryText.text = question.category;
+        questionRankText.text = "Question " + (questionIndex + 1) + " / " + StaticGameInfo.totalQuestionNumber;
+        questionText.text = question.question;
+
+    }
 
     private void SetButtons()
     {
@@ -48,12 +58,16 @@ public class QuestionPanel : MonoBehaviour
             else
             {
                 int randomIncorrectAnswerIdx = Random.Range(0, incorrectAnswers.Count);
-                AnswerBtns[i].onClick.AddListener(delegate { WrongAnswerButtonClick(); });
-                AnswerBtns[i].gameObject.GetComponentInChildren<Text>().text = incorrectAnswers[randomIncorrectAnswerIdx];
+                int BtnIndex = i; // to Use the index in delegate
+                AnswerBtns[BtnIndex].onClick.AddListener(delegate { WrongAnswerButtonClick(BtnIndex); });
+                AnswerBtns[BtnIndex].gameObject.GetComponentInChildren<Text>().text = incorrectAnswers[randomIncorrectAnswerIdx];
                 incorrectAnswers.RemoveAt(randomIncorrectAnswerIdx);
             }
             i--;
         }
+
+        ActionBtn.onClick.AddListener(delegate { SetActionButton(TActBtnFunctions.DisplayAnswer); });
+
     }
 
     private void CorrectAnswerButtonClick()
@@ -61,41 +75,112 @@ public class QuestionPanel : MonoBehaviour
         Debug.Log("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEY");
         isAnsweredCorrectly = true;
 
-        // Make the Button Green
+        SetActionButton(TActBtnFunctions.CorrectAnswer);
 
-        // SetActionButton();
-
-        gameObject.SetActive(false);
-        gameManager.LoadNextQuestion();
     }
 
-    private void WrongAnswerButtonClick()
+    private void WrongAnswerButtonClick(int BtnIndex)
     {
         Debug.Log("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         isAnsweredCorrectly = false;
 
+        AnswerBtns[BtnIndex].GetComponent<Image>().color = Color.red;
 
-        // Make THe Button Red
-        // Make the Button[CorrectButtonidx] Green
+        SetActionButton(TActBtnFunctions.WrongAnswer);
 
-        // SetActionButton();
+    }
 
+    public enum TActBtnFunctions {TimeIsUp, CorrectAnswer, WrongAnswer, DisplayAnswer };
+
+    public void SetActionButton(TActBtnFunctions ActBtnFunction)
+    {
+        switch (ActBtnFunction)
+        {
+            case TActBtnFunctions.TimeIsUp:
+                ActionBtn.GetComponentInChildren<Text>().text = "Time is Up";
+                ActionBtn.GetComponent<Image>().color = Color.red;
+
+                DisableButtons();
+                DisplayAnswer();
+
+                break;
+            case TActBtnFunctions.CorrectAnswer:
+                ActionBtn.GetComponentInChildren<Text>().text = "Correct";
+                ActionBtn.GetComponent<Image>().color = Color.green;
+                DisableButtons();
+                DisplayAnswer();
+
+                break;
+            case TActBtnFunctions.WrongAnswer:
+                ActionBtn.GetComponentInChildren<Text>().text = "Wrong!";
+                ActionBtn.GetComponent<Image>().color = Color.red;
+                DisableButtons();
+                DisplayAnswer();
+
+                break;
+            case TActBtnFunctions.DisplayAnswer:
+                ActionBtn.GetComponent<Image>().color = Color.red;
+                DisableButtons();
+                DisplayAnswer();
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void DisableButtons()
+    {
+        foreach (Button AnswerBtn in AnswerBtns)
+        {
+            AnswerBtn.enabled = false;
+        }
+        ActionBtn.enabled = false;
+
+        StartCoroutine(NextQuestionCoroutine());
+    }
+    
+    
+    private IEnumerator NextQuestionCoroutine()
+    {
+        float LeftTime = gameManager.nextQuestionWaitDuration;
+        Debug.Log("nextQuestionWaitDuration: " + gameManager.nextQuestionWaitDuration);
+
+        yield return new WaitForSeconds(1);
+        LeftTime -= 1;
+        Debug.Log("LeftTime: " + LeftTime);
+
+
+        ActionBtn.gameObject.SetActive(false);
+
+        NextQuestionBtn.gameObject.SetActive(true);
+        NextQuestionBtn.onClick.AddListener(NextQuestion);
+
+        while (LeftTime >= 0)
+        {
+            Debug.Log("inside while LeftTime: " + LeftTime);
+
+            NextQuestionBtn.GetComponentInChildren<Text>().text = "Next Question In " + ((int)LeftTime) + "Seconds";
+            yield return new WaitForSeconds(1);
+            LeftTime -= 1;
+        }
+
+        NextQuestion();
+    }
+
+    public void NextQuestion()
+    {
+        StopCoroutine(NextQuestionCoroutine()); // Button might be pressed manually
+        NextQuestionBtn.gameObject.SetActive(false);
+        ActionBtn.gameObject.SetActive(true);
 
         gameManager.LoadNextQuestion();
         gameObject.SetActive(false);
     }
 
-    public void DisplayAnswer()
+    private void DisplayAnswer()
     {
-        // Make the Button[CorrectButtonidx] Green
-
-        // SetActionButton(); 
-        // Countdown to next question
-
-
-        gameObject.SetActive(false);
-        gameManager.LoadNextQuestion();
-
+        AnswerBtns[correctAnswerIdx].GetComponent<Image>().color = Color.green;
     }
 
 }
