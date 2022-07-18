@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Net;
 using System.IO;
-
+using System.Web;
 
 public static class APIHelper
 {
@@ -32,11 +32,11 @@ public static class APIHelper
         foreach (Question question in fetchedQuestions.results)
         {
             question.category = CategoryNameFixer(question.category);
-            question.question = QuestionCharsFixer(question.question);
-            question.correct_answer = QuestionCharsFixer(question.correct_answer);
-            question.incorrect_answers[0] = QuestionCharsFixer(question.incorrect_answers[0]);
-            question.incorrect_answers[1] = QuestionCharsFixer(question.incorrect_answers[1]);
-            question.incorrect_answers[2] = QuestionCharsFixer(question.incorrect_answers[2]);
+            question.question = HttpUtility.HtmlDecode(question.question);
+            question.correct_answer = HttpUtility.HtmlDecode(question.correct_answer);
+            question.incorrect_answers[0] = HttpUtility.HtmlDecode(question.incorrect_answers[0]);
+            question.incorrect_answers[1] = HttpUtility.HtmlDecode(question.incorrect_answers[1]);
+            question.incorrect_answers[2] = HttpUtility.HtmlDecode(question.incorrect_answers[2]);
         }
         return fetchedQuestions;
     }
@@ -53,11 +53,11 @@ public static class APIHelper
         foreach (Question question in fetchedQuestions.results)
         {
             question.category = CategoryNameFixer(question.category);
-            question.question = QuestionCharsFixer(question.question);
-            question.correct_answer = QuestionCharsFixer(question.correct_answer);
-            question.incorrect_answers[0] = QuestionCharsFixer(question.incorrect_answers[0]);
-            question.incorrect_answers[1] = QuestionCharsFixer(question.incorrect_answers[1]);
-            question.incorrect_answers[2] = QuestionCharsFixer(question.incorrect_answers[2]);
+            question.question = HttpUtility.HtmlDecode(question.question);
+            question.correct_answer = HttpUtility.HtmlDecode(question.correct_answer);
+            question.incorrect_answers[0] = HttpUtility.HtmlDecode(question.incorrect_answers[0]);
+            question.incorrect_answers[1] = HttpUtility.HtmlDecode(question.incorrect_answers[1]);
+            question.incorrect_answers[2] = HttpUtility.HtmlDecode(question.incorrect_answers[2]);
         }
         return fetchedQuestions;
     }
@@ -71,15 +71,6 @@ public static class APIHelper
             return StringToBeFixed;
         else                            // Return the string after ':'
             return FixedString[1];
-    }
-
-    public static string QuestionCharsFixer(string StringToBeFixed)
-    {
-        StringToBeFixed = StringToBeFixed.Replace("&quot;", "\"");
-        StringToBeFixed = StringToBeFixed.Replace("&#039;", "\'");
-        StringToBeFixed = StringToBeFixed.Replace("&amp;", "&");
-
-        return StringToBeFixed;
     }
 
 }
