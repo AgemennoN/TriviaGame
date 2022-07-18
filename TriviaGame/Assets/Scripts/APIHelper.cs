@@ -11,9 +11,14 @@ public static class APIHelper
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
         string json = reader.ReadToEnd();
-        return JsonUtility.FromJson<FetchedCategories>(json);
-    }
 
+        FetchedCategories fetchedCategories = JsonUtility.FromJson<FetchedCategories>(json);
+        foreach (Category category in fetchedCategories.trivia_categories)
+        {
+            category.name = CategoryNameFixer(category.name);
+        }
+        return fetchedCategories;
+    }
 
     public static FetchedQuestions ApiFetchRandomQuestions()
     {
@@ -22,7 +27,18 @@ public static class APIHelper
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
         string json = reader.ReadToEnd();
-        return JsonUtility.FromJson<FetchedQuestions>(json);
+
+        FetchedQuestions fetchedQuestions = JsonUtility.FromJson<FetchedQuestions>(json);
+        foreach (Question question in fetchedQuestions.results)
+        {
+            question.category = CategoryNameFixer(question.category);
+            question.question = QuestionCharsFixer(question.question);
+            question.correct_answer = QuestionCharsFixer(question.correct_answer);
+            question.incorrect_answers[0] = QuestionCharsFixer(question.incorrect_answers[0]);
+            question.incorrect_answers[1] = QuestionCharsFixer(question.incorrect_answers[1]);
+            question.incorrect_answers[2] = QuestionCharsFixer(question.incorrect_answers[2]);
+        }
+        return fetchedQuestions;
     }
 
     public static FetchedQuestions ApiFetchQuestionsByCategory(Category category)
@@ -32,8 +48,40 @@ public static class APIHelper
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
         string json = reader.ReadToEnd();
-        return JsonUtility.FromJson<FetchedQuestions>(json);
+
+        FetchedQuestions fetchedQuestions = JsonUtility.FromJson<FetchedQuestions>(json);
+        foreach (Question question in fetchedQuestions.results)
+        {
+            question.category = CategoryNameFixer(question.category);
+            question.question = QuestionCharsFixer(question.question);
+            question.correct_answer = QuestionCharsFixer(question.correct_answer);
+            question.incorrect_answers[0] = QuestionCharsFixer(question.incorrect_answers[0]);
+            question.incorrect_answers[1] = QuestionCharsFixer(question.incorrect_answers[1]);
+            question.incorrect_answers[2] = QuestionCharsFixer(question.incorrect_answers[2]);
+        }
+        return fetchedQuestions;
     }
+
+    public static string CategoryNameFixer(string StringToBeFixed)
+    {
+        string[] DeleteUntil = new string[] {": " };
+        string[] FixedString = StringToBeFixed.Split(DeleteUntil, System.StringSplitOptions.None );
+
+        if (FixedString.Length == 1)    // Input String doesn't needed to be fixed
+            return StringToBeFixed;
+        else                            // Return the string after ':'
+            return FixedString[1];
+    }
+
+    public static string QuestionCharsFixer(string StringToBeFixed)
+    {
+        StringToBeFixed = StringToBeFixed.Replace("&quot;", "\"");
+        StringToBeFixed = StringToBeFixed.Replace("&#039;", "\'");
+        StringToBeFixed = StringToBeFixed.Replace("&amp;", "&");
+
+        return StringToBeFixed;
+    }
+
 }
 
 
@@ -69,6 +117,8 @@ public class Question
     public string question;
     public string correct_answer;
     public string[] incorrect_answers;
+
+
 }
 
 

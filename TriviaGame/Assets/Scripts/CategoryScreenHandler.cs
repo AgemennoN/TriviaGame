@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class CategoryScreenHandler : MonoBehaviour
 {
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject MainMenuScreen;
+    [SerializeField] private GameObject ScrollViewContent;
     public Category[] categories;
     public GameObject[] categoryButtons;
 
@@ -21,12 +23,11 @@ public class CategoryScreenHandler : MonoBehaviour
 
         for (int i = 0; i < categories.Length; i++)
         {
-            categoryButtons[i] = Instantiate(buttonPrefab, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0), gameObject.transform);
+            categoryButtons[i] = Instantiate(buttonPrefab, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0), ScrollViewContent.transform);
             
-            categoryButtons[i].AddComponent<LayoutElement>();
-            categoryButtons[i].GetComponentInChildren<Text>().text = categories[i].name;
+            categoryButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = categories[i].name;
 
-            Category category = categories[i];  // We need it to be independent from index to use it as a parameter
+            Category category = categories[i];  // To use the index with delegate
 
             Button button = categoryButtons[i].GetComponent<Button>();
             button.onClick.AddListener(delegate { SelectCategory(category); });
@@ -37,6 +38,8 @@ public class CategoryScreenHandler : MonoBehaviour
     public void SelectCategory(Category category)
     {
         StaticGameInfo.selectedCategory = category;
+        
+        Debug.Log(category.name);
 
         StaticGameInfo.questionRequest = APIHelper.ApiFetchQuestionsByCategory(category);
         if (StaticGameInfo.questionRequest.response_code == 0)

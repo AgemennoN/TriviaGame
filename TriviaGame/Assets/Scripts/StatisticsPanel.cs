@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class StatisticsPanel : MonoBehaviour
 {
     [SerializeField] private GameObject ResultPanel;
+    [SerializeField] private TextMeshProUGUI ScoreTxt;
+    [SerializeField] private TextMeshProUGUI CategoryStatsTextPrefab;
     private GameManager gameManager;
     private int CorrectAnswers;
     private List<TCategory> diffrentCategories;
 
     void Start()
     {
+        transform.SetAsFirstSibling();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         CheckCategories();
@@ -77,22 +81,28 @@ public class StatisticsPanel : MonoBehaviour
 
     private void DisplayResults()
     {
-        GameObject ScoreTxt = new GameObject("ScoreTxt", typeof(Text), typeof(LayoutElement));
-        ScoreTxt.transform.parent = ResultPanel.transform;
-        ScoreTxt.GetComponent<Text>().text = "Score: " + CorrectAnswers + " / " + StaticGameInfo.totalQuestionNumber;
-        ScoreTxt.GetComponent<Text>().font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 
         if (diffrentCategories.Count > 1)
         {
+            ScoreTxt.text = CorrectAnswers + " / " + StaticGameInfo.totalQuestionNumber;
             foreach (TCategory category in diffrentCategories)
             {
-                GameObject CategoryTxt = new GameObject(category.name, typeof(Text), typeof(LayoutElement));
-                CategoryTxt.transform.parent = ResultPanel.transform;
+                TextMeshProUGUI CategoryTxt = Instantiate(CategoryStatsTextPrefab, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0), ResultPanel.transform);
                 string text = category.name + ": " + category.correctlyAnswered + " / " + category.totalAnswered;
-                CategoryTxt.GetComponent<Text>().text = text;
-                CategoryTxt.GetComponent<Text>().font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+                CategoryTxt.text = text;
+                //GameObject CategoryTxt = new GameObject(category.name, typeof(Text), typeof(LayoutElement));
+                //CategoryTxt.transform.parent = ResultPanel.transform;
+                //string text = category.name + ": " + category.correctlyAnswered + " / " + category.totalAnswered;
+                //CategoryTxt.GetComponent<Text>().text = text;
+                //CategoryTxt.GetComponent<Text>().font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 
             }
+        }
+        else
+        {
+            ScoreTxt.text = "In Category: " + StaticGameInfo.selectedCategory.name + "\n";
+            ScoreTxt.text += CorrectAnswers + " / " + StaticGameInfo.totalQuestionNumber;
+
         }
 
     }

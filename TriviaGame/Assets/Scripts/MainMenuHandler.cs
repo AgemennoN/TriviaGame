@@ -1,19 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainMenuHandler : MonoBehaviour
 {
     [SerializeField] private GameObject categoryScreen;
     [SerializeField] private Button selectedCategoryBtn;
-
-    private void OnEnable()
+    
+    private void OnEnable() // If there is a selected category enable its button on main menu
     {
-        CategoryScreenHandler CSH = categoryScreen.GetComponent<CategoryScreenHandler>();
         if (StaticGameInfo.selectedCategory != null)
         {
-            selectedCategoryBtn.GetComponentInChildren<Text>().text = StaticGameInfo.selectedCategory.name;
+            selectedCategoryBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Play with Category: " + StaticGameInfo.selectedCategory.name;
             selectedCategoryBtn.onClick.RemoveAllListeners();
+            CategoryScreenHandler CSH = categoryScreen.GetComponent<CategoryScreenHandler>();
             selectedCategoryBtn.onClick.AddListener(delegate { CSH.SelectCategory(StaticGameInfo.selectedCategory); });
             selectedCategoryBtn.gameObject.SetActive(true);
         }

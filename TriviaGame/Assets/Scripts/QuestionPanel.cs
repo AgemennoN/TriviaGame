@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class QuestionPanel : MonoBehaviour
 {
-    [SerializeField] private Text categoryText;
-    [SerializeField] private Text questionRankText;
-    [SerializeField] private Text questionText;
+    [SerializeField] private TextMeshProUGUI categoryText;
+    [SerializeField] private TextMeshProUGUI questionRankText;
+    [SerializeField] private TextMeshProUGUI questionText;
     public Button[] AnswerBtns;
     public Button ActionBtn;
     public Button NextQuestionBtn;
@@ -21,6 +22,7 @@ public class QuestionPanel : MonoBehaviour
 
     private void Start()
     {
+        transform.SetAsFirstSibling();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         questionIndex = StaticGameInfo.currentQuestionIndex;
@@ -30,6 +32,8 @@ public class QuestionPanel : MonoBehaviour
         SetTexts();
         SetButtons();
     }
+
+
 
     private void SetTexts()
     {
@@ -53,14 +57,14 @@ public class QuestionPanel : MonoBehaviour
             if (i == correctAnswerIdx)
             {
                 AnswerBtns[i].onClick.AddListener(delegate { CorrectAnswerButtonClick(); });
-                AnswerBtns[i].gameObject.GetComponentInChildren<Text>().text = correctAnswer;
+                AnswerBtns[i].gameObject.GetComponentInChildren<TextMeshProUGUI>().text = correctAnswer;
             }
             else
             {
                 int randomIncorrectAnswerIdx = Random.Range(0, incorrectAnswers.Count);
                 int BtnIndex = i; // to Use the index in delegate
                 AnswerBtns[BtnIndex].onClick.AddListener(delegate { WrongAnswerButtonClick(BtnIndex); });
-                AnswerBtns[BtnIndex].gameObject.GetComponentInChildren<Text>().text = incorrectAnswers[randomIncorrectAnswerIdx];
+                AnswerBtns[BtnIndex].gameObject.GetComponentInChildren<TextMeshProUGUI>().text = incorrectAnswers[randomIncorrectAnswerIdx];
                 incorrectAnswers.RemoveAt(randomIncorrectAnswerIdx);
             }
             i--;
@@ -92,7 +96,7 @@ public class QuestionPanel : MonoBehaviour
         switch (ActBtnFunction)
         {
             case TActBtnFunctions.TimeIsUp:
-                ActionBtn.GetComponentInChildren<Text>().text = "Time is Up";
+                ActionBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Time is Up";
                 ActionBtn.GetComponent<Image>().color = Color.red;
 
                 DisableButtons();
@@ -100,14 +104,14 @@ public class QuestionPanel : MonoBehaviour
 
                 break;
             case TActBtnFunctions.CorrectAnswer:
-                ActionBtn.GetComponentInChildren<Text>().text = "Correct";
+                ActionBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Correct";
                 ActionBtn.GetComponent<Image>().color = Color.green;
                 DisableButtons();
                 DisplayAnswer();
 
                 break;
             case TActBtnFunctions.WrongAnswer:
-                ActionBtn.GetComponentInChildren<Text>().text = "Wrong!";
+                ActionBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Wrong!";
                 ActionBtn.GetComponent<Image>().color = Color.red;
                 DisableButtons();
                 DisplayAnswer();
@@ -156,7 +160,7 @@ public class QuestionPanel : MonoBehaviour
 
         while (LeftTime >= 0)
         {
-            NextQuestionBtn.GetComponentInChildren<Text>().text = text + ((int)LeftTime) + " Seconds";
+            NextQuestionBtn.GetComponentInChildren<TextMeshProUGUI>().text = text + ((int)LeftTime) + " Seconds";
             yield return new WaitForSeconds(1);
             LeftTime -= 1;
         }

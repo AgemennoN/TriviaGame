@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject canvas;
-    [SerializeField] private Text countdownText;
+    [SerializeField] private TextMeshProUGUI countdownText;
     public GameObject questionPanelPrefab;
-    public GameObject currentQuestionPanel;
+    [HideInInspector] public GameObject currentQuestionPanel;
     public GameObject statisticsPanelPrefab;
-    
+    public GameObject btnPreviousQuestion;
+    public GameObject btnNextQuestion;
+
+
 
     public List<GameObject> questionPanels;
 
@@ -48,17 +52,12 @@ public class GameManager : MonoBehaviour
         // This if probably should be in action button
         if (StaticGameInfo.currentQuestionIndex == StaticGameInfo.totalQuestionNumber)
         {
-            Debug.Log("if e girdi");
-            Debug.Log("StaticGameInfo.currentQuestionIndex: " + StaticGameInfo.currentQuestionIndex);
-            Debug.Log("StaticGameInfo.totalQuestionNumber: " + StaticGameInfo.totalQuestionNumber);
-
             currentQuestionPanel = Instantiate(statisticsPanelPrefab, canvas.transform);
             questionPanels.Add(currentQuestionPanel);
             EndGame();
         }
         else
         {
-            Debug.Log("Else e girdi, index =  " + StaticGameInfo.currentQuestionIndex);
             currentQuestionPanel = Instantiate(questionPanelPrefab, canvas.transform);
             questionPanels.Add(currentQuestionPanel);
 
@@ -91,10 +90,47 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         countdownText.gameObject.SetActive(false);
-        // Previous Question button
-        // Next Question button
+        btnPreviousQuestion.SetActive(true);
     }
 
+    public void PreviousQuestion()
+    {
+        StaticGameInfo.currentQuestionIndex--;
+
+        currentQuestionPanel.SetActive(false);
+        currentQuestionPanel = questionPanels[StaticGameInfo.currentQuestionIndex];
+        currentQuestionPanel.SetActive(true);
+
+
+        if (StaticGameInfo.currentQuestionIndex == 0)
+        {
+            btnPreviousQuestion.SetActive(false);
+        }
+
+        if (btnNextQuestion.activeSelf == false)
+        {
+            btnNextQuestion.SetActive(true);
+        }
+    }
+    public void NextQuestion()
+    {
+        StaticGameInfo.currentQuestionIndex++;
+
+        currentQuestionPanel.SetActive(false);
+        currentQuestionPanel = questionPanels[StaticGameInfo.currentQuestionIndex];
+        currentQuestionPanel.SetActive(true);
+
+
+        if (StaticGameInfo.currentQuestionIndex == StaticGameInfo.totalQuestionNumber)
+        {
+            btnNextQuestion.SetActive(false);
+        }
+
+        if (btnPreviousQuestion.activeSelf == false)
+        {
+            btnPreviousQuestion.SetActive(true);
+        }
+    }
 
     public void BackToMainMenu()
     {
