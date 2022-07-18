@@ -24,16 +24,25 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public float nextQuestionWaitDuration = 4.0f;
     private float countdownTotalTime = 20.4f;
     private float countdownTimeLeft;
+    private float oneSec = 0.0f;
     [HideInInspector] public bool countdownActive;
     [HideInInspector] public bool isGameEnd;
+
+    private OptionCanvas optionCanvas;
+    public bool TglSFx;
+    public int TimeCounterSoundStart;
+    public AudioSource CountdownSFx;
 
     void Start()
     {
         isGameEnd = false;
         questionPanels = new List<GameObject>();
         StaticGameInfo.currentQuestionIndex = -1;
-        LoadNextQuestion();
 
+        optionCanvas = GameObject.Find("OptionCanvas").GetComponent<OptionCanvas>();
+        CheckSFxOption();
+
+        LoadNextQuestion();
     }
 
 
@@ -74,6 +83,19 @@ public class GameManager : MonoBehaviour
         {
             countdownTimeLeft -= Time.deltaTime;
             countdownText.text = ((int)countdownTimeLeft).ToString();
+
+            if (countdownTimeLeft <= TimeCounterSoundStart)
+            {
+                oneSec -= Time.deltaTime;
+                if (oneSec <= 0)
+                {
+                    oneSec = 1.0f;
+                    if (TglSFx == true)
+                    {
+                        CountdownSFx.Play();
+                    }
+                }
+            }
 
             if (countdownTimeLeft <= 0)
             {
@@ -154,6 +176,11 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void CheckSFxOption()
+    {
+        TglSFx = optionCanvas.TglSFx;
+        int.TryParse(optionCanvas.ClockSoundStartAtInput.text, out TimeCounterSoundStart);
+    }
 
 
 
