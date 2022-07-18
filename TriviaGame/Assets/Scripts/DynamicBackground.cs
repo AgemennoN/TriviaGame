@@ -7,7 +7,7 @@ public class DynamicBackground : MonoBehaviour
     private static DynamicBackground instance = null;
 
     public GameObject squarePrefab;
-    private float spawnRangeX = 7;
+    private float spawnRangeX = 3.5f;
     private float startDelay = 1;
     private float spawnInternal = 3;
 

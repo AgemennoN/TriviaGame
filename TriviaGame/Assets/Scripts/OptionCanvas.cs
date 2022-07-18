@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 using UnityEngine;
 
 public class OptionCanvas : MonoBehaviour
 {
     private static OptionCanvas instance = null;
+    public AudioSource music;
+    public GameObject musicVolumeBar;
+    public AudioMixer audioMixer;
     public bool TglDynamicBackground;
     public bool TglMusic;
     public bool TglTimerSound;
@@ -29,7 +33,6 @@ public class OptionCanvas : MonoBehaviour
         TglMusic = true;
         TglTimerSound = true;
 
-        //PlayMusic();
     }
 
     public void OptionToMainMenu()
@@ -59,5 +62,28 @@ public class OptionCanvas : MonoBehaviour
             Background.ToggledOn();
         }
     }
+
+    public void ToggleMusic()
+    {
+        Background = GameObject.Find("DynamicBackground").GetComponent<DynamicBackground>();
+        if (TglMusic == true)
+        {
+            TglMusic = false;
+            musicVolumeBar.SetActive(false);
+            music.Stop();
+        }
+        else if (TglMusic == false)
+        {
+            TglMusic = true;
+            musicVolumeBar.SetActive(true);
+            music.Play();
+        }
+    }
+
+    public void SetVolume(float volume)
+    {
+        audioMixer.SetFloat("Volume", volume);
+    }
+  
 
 }
