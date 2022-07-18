@@ -8,6 +8,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject canvas;
+    [SerializeField] private GameObject ReturnMenuCanvas;
     [SerializeField] private TextMeshProUGUI countdownText;
     public GameObject questionPanelPrefab;
     [HideInInspector] public GameObject currentQuestionPanel;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        isGameEnd = false;
         questionPanels = new List<GameObject>();
         StaticGameInfo.currentQuestionIndex = -1;
         LoadNextQuestion();
@@ -89,6 +91,7 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
+        isGameEnd = true;
         countdownText.gameObject.SetActive(false);
         btnPreviousQuestion.SetActive(true);
     }
@@ -132,9 +135,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void BackToMainMenu()
+    public void ReturnMenuBtn()
     {
         //First Ask if the User is sure then load the scene
+        if (isGameEnd == false)
+        {
+            ReturnMenuCanvas.SetActive(true);
+        }
+        else if (isGameEnd == true)
+        {
+            ReturnMenu();
+        }
+    }
+
+    public void ReturnMenu()
+    {
         SceneManager.LoadScene("MainMenuScene");
     }
 
