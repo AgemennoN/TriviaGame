@@ -105,37 +105,24 @@ public class StatisticsPanel : MonoBehaviour
             tempText = "Play Again with Category: " + StaticGameInfo.selectedCategory.name;
             PlayAgainBtn.GetComponentInChildren<TextMeshProUGUI>().text = tempText;
         }
-
     }
 
     private void PlayAgainWithSelectedCategory()
     {
-        StaticGameInfo.questionRequest = APIHelper.ApiFetchQuestionsByCategory(StaticGameInfo.selectedCategory);
+        StaticGameInfo.questionRequest = APIHelper.ApiFetchQuestionsByCategory(StaticGameInfo.selectedCategory, StaticGameInfo.totalQuestionNumber);
         if (StaticGameInfo.questionRequest.response_code == 0)
-        {
-            StaticGameInfo.totalQuestionNumber = StaticGameInfo.questionRequest.results.Length;
             SceneManager.LoadScene("GameScene");
-        }
         else
-        {
             Debug.Log("response_code = " + StaticGameInfo.questionRequest.response_code);
-        }
     }
 
     private void PlayAgainWithRandomQuestions()
     {
-        StaticGameInfo.questionRequest = APIHelper.ApiFetchRandomQuestions();
-
+        StaticGameInfo.questionRequest = APIHelper.ApiFetchRandomQuestions(StaticGameInfo.totalQuestionNumber);
         if (StaticGameInfo.questionRequest.response_code == 0)
-        {
-            StaticGameInfo.totalQuestionNumber = StaticGameInfo.questionRequest.results.Length;
             SceneManager.LoadScene("GameScene");
-
-        }
         else
-        {
             Debug.Log("response_code = " + StaticGameInfo.questionRequest.response_code);
-        }
     }
 
 }

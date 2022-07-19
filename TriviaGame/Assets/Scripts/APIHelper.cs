@@ -20,9 +20,9 @@ public static class APIHelper
         return fetchedCategories;
     }
 
-    public static FetchedQuestions ApiFetchRandomQuestions()
+    public static FetchedQuestions ApiFetchRandomQuestions(int questionNumber)
     {
-        string url = "https://opentdb.com/api.php?amount=10&type=multiple";
+        string url = "https://opentdb.com/api.php?amount=" + questionNumber + "&type=multiple";
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -41,9 +41,9 @@ public static class APIHelper
         return fetchedQuestions;
     }
 
-    public static FetchedQuestions ApiFetchQuestionsByCategory(Category category)
+    public static FetchedQuestions ApiFetchQuestionsByCategory(Category category, int questionNumber)
     {
-        string url = "https://opentdb.com/api.php?amount=10&category=" + category.id + "&type=multiple";
+        string url = "https://opentdb.com/api.php?amount=" + questionNumber + "&category=" + category.id + "&type=multiple";
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -62,10 +62,12 @@ public static class APIHelper
         return fetchedQuestions;
     }
 
+
+    // Removes the words like "Entertainment:" from category names
     public static string CategoryNameFixer(string StringToBeFixed)
     {
-        string[] DeleteUntil = new string[] {": " };
-        string[] FixedString = StringToBeFixed.Split(DeleteUntil, System.StringSplitOptions.None );
+        string[] DeleteUntil = new string[] { ": " };
+        string[] FixedString = StringToBeFixed.Split(DeleteUntil, System.StringSplitOptions.None);
 
         if (FixedString.Length == 1)    // Input String doesn't needed to be fixed
             return StringToBeFixed;
@@ -75,6 +77,8 @@ public static class APIHelper
 
 }
 
+
+// The Classes below Can stores the objects in Json files
 
 [System.Serializable]
 public class FetchedCategories
@@ -88,8 +92,6 @@ public class Category
     public int id;
     public string name;
 }
-
-
 
 
 [System.Serializable]
@@ -111,6 +113,4 @@ public class Question
 
 
 }
-
-
 

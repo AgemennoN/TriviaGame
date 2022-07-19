@@ -11,50 +11,47 @@ public class CategoryScreenHandler : MonoBehaviour
     [SerializeField] private GameObject MainMenuScreen;
     [SerializeField] private GameObject ScrollViewContent;
     [SerializeField] private TMP_InputField InputCategory;
-    public Category[] categories;
-    public GameObject[] categoryButtons;
-    private List<string> categoryNames;
+    private Category[] categories;
+    private GameObject[] categoryButtons;   // Button game objects disabled and enabled according to the searched word
+    private List<string> categoryNames;     // List that only holds categorie names as string to use in searchbar
 
     void Awake()
     {
         SetCategoryButtons();
-
         EnableSearchedCategories();
-
     }
 
     private void SetCategoryButtons()
     {
         categories = APIHelper.ApiFetchCategories().trivia_categories;
-        categoryNames = new List<string>();
         categoryButtons = new GameObject[categories.Length];
+        categoryNames = new List<string>();
 
         for (int i = 0; i < categories.Length; i++)
         {
+            // creates new buttons, name them, add listener to them.
             categoryButtons[i] = Instantiate(buttonPrefab, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0), ScrollViewContent.transform);
             categoryButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = categories[i].name;
             categoryNames.Add(categories[i].name.ToLower());
-
-
 
             Category category = categories[i];  // To use the index with delegate
             Button button = categoryButtons[i].GetComponent<Button>();
             button.onClick.AddListener(delegate { SelectCategory(category); });
 
-            categoryButtons[i].gameObject.SetActive(false);
         }
     }
 
-    public void EnableSearchedCategories()
+    public void EnableSearchedCategories()  // This function is called when the input changes
     {
         if (InputCategory.text.Trim() == "" || InputCategory.text == null)
+        // If searchbar is Empty, enable all the buttons
         {
             for (int i = 0; i < categoryNames.Count; i++)
             {
                 categoryButtons[i].SetActive(true);
             }
         }
-        else
+        else // Only enable the buttons that contains the Input, disable others.
         {
             for (int i = 0; i < categoryNames.Count; i++)
             {
@@ -66,33 +63,33 @@ public class CategoryScreenHandler : MonoBehaviour
         }
     }
 
-    public void ClearSearchbar()
+    public void SelectCategory(Category category)   
     {
-        InputCategory.text = "";
-    }
-
-    public void SelectCategory(Category category)
-    {
+        // Stores the selected category in a static class, so that it will persist along the scenes
         StaticGameInfo.selectedCategory = category;
 
-
-        StaticGameInfo.questionRequest = APIHelper.ApiFetchQuestionsByCategory(category);
-        if (StaticGameInfo.questionRequest.response_code == 0)
+        // Fetches the questions with the selected category from API 
+        StaticGameInfo.questionRequest = APIHelper.ApiFetchQuestionsByCategory(category, StaticGameInfo.totalQuestionNumber);
+        if (StaticGameInfo.questionRequest.response_code == 0) // response_code == 0 means fetch is successful
         {
-            StaticGameInfo.totalQuestionNumber = StaticGameInfo.questionRequest.results.Length;
             SceneManager.LoadScene("GameScene");
         }
         else
         {
             Debug.Log("response_code = " + StaticGameInfo.questionRequest.response_code);
-            //Give warning or smthng
         }
     }
 
     public void BackToMainMenu()
     {
+        ClearSearchbar();
         gameObject.SetActive(false);
         MainMenuScreen.gameObject.SetActive(true);
+    }
+
+    public void ClearSearchbar() //Cleans the Searchbar Input
+    {
+        InputCategory.text = "";
     }
 
 }

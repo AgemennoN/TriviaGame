@@ -8,11 +8,22 @@ public class BackGroundSquare : MonoBehaviour
     private float speed;
     private float rotatingSpeed;
     private float scaling;
+    
     void Start()
     {
+        // Finds OptionCanvas to check if TglDynamicBackground is true
         OptionCanvas = GameObject.Find("OptionCanvas").GetComponent<OptionCanvas>();
 
+        // Squares can live even the scenes change
         DontDestroyOnLoad(transform.gameObject);
+
+        SquareRandomizer();
+
+        
+    }
+
+    private void SquareRandomizer() // Randomize the square's speed, size and color
+    {
         speed = Random.Range(0.5f, 2.5f);
         rotatingSpeed = Random.Range(-1.5f, 1.5f);
 
@@ -24,11 +35,13 @@ public class BackGroundSquare : MonoBehaviour
 
     }
 
-    void FixedUpdate()
+    void FixedUpdate()  
     {
+        // Make the square rise and rotate
         transform.Translate(Vector3.up * speed * Time.deltaTime, Space.World);
         transform.Rotate(Vector3.forward * rotatingSpeed, Space.Self);
 
+        // Destroy the square when it's out of the screen
         if (transform.position.y > 8 || OptionCanvas.TglDynamicBackground == false)
         {
             Object.Destroy(gameObject);

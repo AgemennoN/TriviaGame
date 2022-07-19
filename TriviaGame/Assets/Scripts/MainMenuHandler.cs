@@ -7,9 +7,14 @@ public class MainMenuHandler : MonoBehaviour
 {
     [SerializeField] private GameObject categoryScreen;
     [SerializeField] private Button selectedCategoryBtn;
-    
-    private void OnEnable() // If there is a selected category enable its button on main menu
+    public int totalQuestionNumber;
+    private void Start() 
     {
+        //StaticGameInfo.totalQuestionNumber could be adjusted in option menu in later versions of the game easly
+        totalQuestionNumber = 10;
+        StaticGameInfo.totalQuestionNumber = totalQuestionNumber;
+
+        // If there is a selected category, enable its button on main menu
         if (StaticGameInfo.selectedCategory != null)
         {
             selectedCategoryBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Play with Category: " + StaticGameInfo.selectedCategory.name;
@@ -26,20 +31,16 @@ public class MainMenuHandler : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void RandomQuestions()
+    public void RandomQuestions()   // Starts the game with questions from random categories
     {
-        StaticGameInfo.questionRequest = APIHelper.ApiFetchRandomQuestions();
-
+        StaticGameInfo.questionRequest = APIHelper.ApiFetchRandomQuestions(StaticGameInfo.totalQuestionNumber);
         if (StaticGameInfo.questionRequest.response_code == 0)
         {
-            StaticGameInfo.totalQuestionNumber = StaticGameInfo.questionRequest.results.Length;
             SceneManager.LoadScene("GameScene");
-
         }
         else
         {
             Debug.Log("response_code = " + StaticGameInfo.questionRequest.response_code);
-            //Give warning or smthng
         }
     }
 
