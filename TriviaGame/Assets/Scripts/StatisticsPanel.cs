@@ -100,6 +100,8 @@ public class StatisticsPanel : MonoBehaviour
         {
             ScoreTxt.text = "In Category: " + StaticGameInfo.selectedCategory.name + "\n";
             ScoreTxt.text += CorrectAnswers + " / " + StaticGameInfo.totalQuestionNumber;
+            ScoreTxt.transform.SetParent(ResultPanel.transform, false);
+            ResultPanel.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.MiddleCenter;
 
             PlayAgainBtn.onClick.AddListener(PlayAgainWithSelectedCategory);
             tempText = "Play Again with Category: " + StaticGameInfo.selectedCategory.name;

@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioSource CountdownSFx;
     [SerializeField] private AudioSource CorrectAnswerSFx;
     [SerializeField] private AudioSource WrongAnswerSFx;
+    [SerializeField] private AudioSource DisplayAnswerSFx;
+    [SerializeField] private AudioSource TimeIsUpSFx;
 
     void Start()
     {
@@ -196,16 +198,25 @@ public class GameManager : MonoBehaviour
     public void PlayCorrectAnswerAudio()
     {
         if (TglSFx == true)
-        {
             CorrectAnswerSFx.Play();
-        }
     }
+
     public void PlayWrongAnswerAudio()
     {
         if (TglSFx == true)
-        {
             WrongAnswerSFx.Play();
-        }
+    }
+
+    public void PlayDisplayAnswerAudio()
+    {
+        if (TglSFx == true)
+            DisplayAnswerSFx.Play();
+    }
+
+    public void PlayTimeIsUpAudio()
+    {
+        if (TglSFx == true)
+            TimeIsUpSFx.Play();
     }
 
 

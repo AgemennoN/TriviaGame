@@ -111,6 +111,8 @@ public class QuestionPanel : MonoBehaviour
                 ActionBtn.GetComponent<Image>().color = Color.red;
                 DisableButtons();
                 DisplayAnswer();
+                gameManager.PlayTimeIsUpAudio();
+                
                 break;
             case TActBtnFunctions.CorrectAnswer:
                 // If user's answer is correct.
@@ -141,6 +143,8 @@ public class QuestionPanel : MonoBehaviour
                 ActionBtn.GetComponent<Image>().color = Color.red;
                 DisableButtons();
                 DisplayAnswer();
+                gameManager.PlayDisplayAnswerAudio();
+
                 break;
             default:
                 break;
