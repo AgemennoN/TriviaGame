@@ -100,6 +100,7 @@ public class QuestionPanel : MonoBehaviour
 
     public void SetActionButton(TActBtnFunctions ActBtnFunction)
     {
+        gameManager.countdownActive = false; // Stops the Countdown.
         switch (ActBtnFunction)
         {
             case TActBtnFunctions.TimeIsUp:
@@ -119,6 +120,8 @@ public class QuestionPanel : MonoBehaviour
                 ActionBtn.GetComponent<Image>().color = Color.green;
                 DisableButtons();
                 DisplayAnswer();
+                gameManager.PlayCorrectAnswerAudio();
+
                 break;
             case TActBtnFunctions.WrongAnswer:
                 // If user's answer is incorrect.
@@ -128,6 +131,8 @@ public class QuestionPanel : MonoBehaviour
                 ActionBtn.GetComponent<Image>().color = Color.red;
                 DisableButtons();
                 DisplayAnswer();
+                gameManager.PlayWrongAnswerAudio();
+
                 break;
             case TActBtnFunctions.DisplayAnswer:
                 // If user pressed ActionButton.
@@ -144,7 +149,6 @@ public class QuestionPanel : MonoBehaviour
 
     private void DisableButtons()
     {
-        gameManager.countdownActive = false; // Stops Timer to answer the question.
         foreach (Button AnswerBtn in AnswerBtns)
         {
             AnswerBtn.enabled = false;

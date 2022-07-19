@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool TglSFx;
     [HideInInspector] public int TimeCounterSoundStart;
     [SerializeField] private AudioSource CountdownSFx;
+    [SerializeField] private AudioSource CorrectAnswerSFx;
+    [SerializeField] private AudioSource WrongAnswerSFx;
 
     void Start()
     {
@@ -190,6 +192,21 @@ public class GameManager : MonoBehaviour
         int.TryParse(optionCanvas.ClockSoundStartAtInput.text, out TimeCounterSoundStart);
     }
 
+
+    public void PlayCorrectAnswerAudio()
+    {
+        if (TglSFx == true)
+        {
+            CorrectAnswerSFx.Play();
+        }
+    }
+    public void PlayWrongAnswerAudio()
+    {
+        if (TglSFx == true)
+        {
+            WrongAnswerSFx.Play();
+        }
+    }
 
 
 }
